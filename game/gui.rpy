@@ -52,7 +52,7 @@ define gui.muted_color = '#84a366'
 define gui.hover_muted_color = '#adc199'
 
 ## Цвета, используемые в тексте диалогов и выборов.
-define gui.text_color = '#404040'
+define gui.text_color = '#d6d6d6'
 define gui.interface_text_color = '#404040'
 
 
@@ -99,17 +99,19 @@ define gui.game_menu_background = "gui/game_menu.png"
 
 ## Высота текстового окна, содержащего диалог.
 define gui.textbox_height = 278
+define gui.textbox_width = 900 
 
 ## Местоположение текстового окна по вертикали экрана. 0.0 — верх, 0.5 — центр
 ## и 1.0 — низ.
 define gui.textbox_yalign = 1.0
+define gui.textbox_xalign = 0.7
 
 
 ## Местоположение имени говорящего персонажа по отношению к текстовому окну.
 ## Это могут быть целые значения в пикселях слева и сверху от начала окна или
 ## процентное отношение, например, 0.5 для центрирования.
-define gui.name_xpos = 360
-define gui.name_ypos = 0
+define gui.name_xpos = 0.25
+define gui.name_ypos = -0.03
 
 ## Горизонтальное выравнивание имени персонажа. Это может быть 0.0 для
 ## левоориентированного, 0.5 для центрированного и 1.0 для правоориентированного
@@ -133,8 +135,8 @@ define gui.namebox_tile = False
 ## Размещение диалога по отношению к текстовому окну. Это могут быть целые
 ## значения в пикселях слева и сверху от текстового окна или процентное
 ## отношение, например, 0.5 для центрирования.
-define gui.dialogue_xpos = 402
-define gui.dialogue_ypos = 75
+define gui.dialogue_xpos = 0.27
+define gui.dialogue_ypos = 0.23
 
 ## Максимальная ширина текста диалога в пикселях.
 define gui.dialogue_width = 1116

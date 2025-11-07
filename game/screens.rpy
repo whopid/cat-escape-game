@@ -130,35 +130,34 @@ style namebox_label is say_label
 
 
 style window:
-    xalign 0.5
-    xfill True
-    yalign gui.textbox_yalign
+    xalign 0.75
+    yalign 0.945
+    xsize 970
     ysize gui.textbox_height
-
     background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
+    left_padding 60       # ← фиксируем место начала текста
+    right_padding 60
+    top_padding 80
+    bottom_padding 30
 
 style namebox:
-    xpos gui.name_xpos
-    xanchor gui.name_xalign
-    xsize gui.namebox_width
-    ypos gui.name_ypos
-    ysize gui.namebox_height
-
-    background Frame("gui/namebox.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
-    padding gui.namebox_borders.padding
+    xalign 0.0           # выравнивание по левому краю окна
+    xoffset -10           # отступ от левого края окна
+    yalign -0.75         # немного выше плашки (подбирается под твой фон)
+    background Frame("gui/namebox.png", gui.namebox_borders, tile=gui.namebox_tile)
+    padding (15, 5, 15, 5)
+    text_align 0.0        # текст в имени выравниваем влево
 
 style say_label:
     properties gui.text_properties("name", accent=True)
-    xalign gui.name_xalign
-    yalign 0.5
+    xalign 0.0            # выравнивание текста по левому краю
+    text_align 0.0
 
 style say_dialogue:
     properties gui.text_properties("dialogue")
-
-    xpos gui.dialogue_xpos
-    xsize gui.dialogue_width
-    ypos gui.dialogue_ypos
-
+    xalign 0.0
+    yalign 0.0
+    text_align 0.0       # ← чтобы строки выравнивались влево
     adjust_spacing False
 
 ## Экран ввода #################################################################
@@ -353,32 +352,84 @@ style navigation_button_text:
 ## https://www.renpy.org/doc/html/screen_special.html#main-menu
 
 screen main_menu():
-
-    ## Этот тег гарантирует, что любой другой экран с тем же тегом будет
-    ## заменять этот.
+    
+    ## Этот оператор гарантирует, что любой другой экран меню будет заменён.
     tag menu
 
-    add gui.main_menu_background
+    ## Фон главного меню
+    add "gui/main_menu_bg.png"  # Замени на свой фон
+    
+    ## Заголовок игры (как на картинке)
+    add "gui/title.png" at title_animation:
+        xalign 0.5
+        yalign 0.3
 
-    ## Эта пустая рамка затеняет главное меню.
+    ## Контейнер для кнопок меню
     frame:
-        style "main_menu_frame"
-
-    ## Оператор use включает отображение другого экрана в данном. Актуальное
-    ## содержание главного меню находится на экране навигации.
-    use navigation
-
-    if gui.show_name:
-
+        style_prefix "main_menu"
+        xalign 0.55
+        yalign 0.4
+        
         vbox:
-            style "main_menu_vbox"
+            spacing 25
+            
+            ## Кнопка "Начать игру"
+            imagebutton:
+                idle "gui/button_start_idle.png"
+                hover "gui/button_start_idle.png"
+                action Start()
+                xalign 0.5
+            
+            ## Кнопка "Информация"  
+            imagebutton:
+                idle "gui/button_info_idle.png"
+                hover "gui/button_info_idle.png"
+                action ShowMenu("info_screen")
+                xalign 0.5
+            
+            ## Кнопка "Выйти"
+            imagebutton:
+                idle "gui/button_exit_idle.png"
+                hover "gui/button_exit_idle.png"
+                action Quit(confirm=False)
+                xalign 0.5
 
-            text "[config.name!t]":
-                style "main_menu_title"
+## Анимация для заголовка
+transform title_animation:
+    alpha 0.0
+    yoffset -50
+    easein 1.0 alpha 1.0 yoffset 0
 
-            text "[config.version]":
-                style "main_menu_version"
-
+## Экран информации (как на картинке "неформация")
+screen info_screen():
+    tag menu
+    
+    add "gui/info_bg.png"  # Фон для экрана информации
+    
+    ## Заголовок "ИНФОРМАЦИЯ"
+    add "gui/info_title.png":
+        xalign 0.5
+        yalign 0.1
+    
+    ## Текст информации
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 600
+        ysize 400
+        
+        vbox:
+            spacing 20
+            text "Здесь будет информация об игре, разработчиках и управлении."
+            text "Кот-Ник: Путь Моруку - визуальная новелла..."
+    
+    ## Кнопка назад
+    imagebutton:
+        idle "gui/button_back_idle.png"
+        hover "gui/button_back_idle.png"
+        action Return()
+        xalign 0.1
+        yalign 0.9
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
