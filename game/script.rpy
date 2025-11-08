@@ -3,6 +3,7 @@ define mc = Character("[player_name]", color="#ffffff")
 define n = Character("Ник", color="#ffffff")
 define p = Character("Парацетамол", color="#ffff9b")
 define rtut = Character("Ртуть", color="#91cdff")
+define ch = Character("Хлор", color="#ffbc49")
 
 
 # Начало игры
@@ -148,12 +149,117 @@ label scene_2:
     rtut "О, да! Точно! Я помогаю всем друзьям! Услуга за услугу: друг помогает мне собрать ракушки, а я, в свою очередь, помогаю переплыть на другую сторону бассейна!"
     n "Я согласен."
 
-    # --- Конец сцены ---
     scene black with fade
     show text "Ник решает помочь Ртути собрать ракушки..." at truecenter with dissolve
     pause 2
     hide text with dissolve
+    scene black with fade
 
+    #правила игры
+    show rules_shells at truecenter with dissolve
+    pause 5
+    hide rules_shells with dissolve
+
+    #!!!!ПОСЛЕ ЭТИХ СЛОВ НАДО ДОБАВИТЬ ИГРУ ПОИСК РАКУШЕК!!!!
+
+    scene pool_bg with fade
+    show rtut neutral at Position(xalign=0.27, yalign=0.96) with dissolve
+    show nickel neutral at Position(xalign=-0.02, yalign=0.9) with dissolve
+    rtut "Отличная командная работа! Теперь моя очередь!"
+
+    # --- Конец сцены ---
+    scene black with fade
+    show text "Ртуть помогла Нику переплыть на другую сторону бассейна. Он отправляется дальше…" at truecenter with dissolve
+    pause 2
+    hide text with dissolve
+
+    jump scene_3
+    return
+
+label scene_3:
+
+    # --- Локация: коридор ---
+    scene corridor_green with fade
+    show nickel neutral at Position(xalign=0.65, yalign=0.6) with dissolve:
+            zoom 0.8
+
+    n "(Не знаю, куда мне стоит пойти дальше…)"
+
+    # --- Переход: чёрный экран и повествование ---
+    scene black with fade
+    show text "Ник идёт дальше.\n\nНеожиданно под лапами начинают попадаться сухие веточки и листья..." at truecenter with dissolve
+    pause 3
+    hide text with dissolve
+
+    show text "Он видит приоткрытую дверь, из которой доносится запах свежей травы." at truecenter with dissolve
+    pause 3
+    hide text with dissolve
+
+    # --- Переход к следующей локации ---
+    jump scene_4
+
+label scene_4:
+
+    scene bg_forest with fade
+    show nickel neutral at Position(xalign=0.17, yalign=0.8)
+    n "Лес? В лаборатории? Ох, я уже ничему не удивляюсь…"
+
+    show chlor neutral at Position(xalign=0.7, yalign=0.6)
+    ch "Один отдыхаешь?"
+
+    n "Мряяяяяяяяяяяу!"
+
+    ch "Да, друг мой, я помогу тебе. Хлор всем помогает, особенно друзьям. Тебе же нужна помощь приятеля Хлора, да?"
+
+    n "(Этот, видимо, особенный случай…)"
+
+    ch "Я как будто бы уже семь триллионов миллиардов лет проживаю на триллионах и триллионах таких же планет… Поэтому сразу вижу, что ты какой-то печалик."
+
+    n "Я ищу выход. Ты знаешь, где он?"
+
+    ch "А я здесь ищу только одного — покоя, умиротворения и вот этой гармонии, от слияния с бесконечно вечн…"
+
+    n "Хлор! Хлор ведь помогает друзьям? Мне нужна твоя помощь, чтобы выбраться отсюда!"
+
+    ch "Где-то я был больше подобен растению… Где-то я больше был подобен птице. Там — червю… Где-то был просто сгусток камня… Это всё есть душа, понимаешь?"
+
+    n "…"
+
+    ch "Но тебе этого не понять… Поэтому ты… что ты?"
+
+    n "Мне нужно найти выход, Хлор. Ты поможешь мне?"
+
+    ch "Услышал тебя, друг мой… Есть у меня {b}{i}седьмое{/i}{/b} чудо света, будто бы очень важное... Представляешь, я его терял и находил, а потом снова терял и находил… и так {b}{i}семь{/i}{/b} раз…" 
+    ch "Друг, и такое бывает. А потом я его сломал. И да, друг, {b}{i}семь раз{/i}{/b} . Возьми его и обязательно используй только с умом! Береги это! Это больше…"
+
+    n "(Горстка кусочков?.. Спасибо тут не скажешь)"
+    n "О, хорошо."
+
+    scene black with fade
+    show text "Хлор немного приподнимается, потягивается, выгибает спинку и задней лапкой чешет за ушком.\n\nЛениво поворачивается, достает из-под коры кусочки ключ-карты и медленно протягивает их Нику." at truecenter with dissolve
+    pause 5
+    hide text with dissolve
+
+    # --- Системная вставка: начало мини-игры ---
+    show rules_puzzle at truecenter with dissolve
+    pause 5
+    hide rules_puzzle with dissolve
+    #!!!ПОСЛЕ ЭТОГО ВСТАВИТЬ МИНИ ИГРУ ПАЗЗЛЫ
+    # call puzzle_game
+
+    scene bg_forest with fade
+
+    show chlor neutral at Position(xalign=0.7, yalign=0.6)
+    show nickel neutral at Position(xalign=0.17, yalign=0.8)
+    ch "Поэтому давай… Наши пути здесь, конечно, имеют грани подобия, потому что всё едино… Но я-то тебя прекрасно понимаю, а вот ты меня — вряд ли…"
+    ch "Вот и всё, поэтому давай, ступай, в конце леса есть дверь, сам разберёшься, а я пошёл наслаждаться прекрасным."
+
+    hide chlor neutral with dissolve
+
+    n "(Пора идти дальше...)"
+
+    scene black with fade
+    return
 
 label chapter1_menu:
     menu:
