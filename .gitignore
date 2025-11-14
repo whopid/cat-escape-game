@@ -25,6 +25,7 @@
 /dialogue.txt
 /strings.json
 
+.DS_Store
 .idea
 .venv
 venv

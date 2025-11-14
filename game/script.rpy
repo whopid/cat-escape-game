@@ -160,6 +160,7 @@ label scene_2:
     hide rules_shells with dissolve
 
     #!!!!ПОСЛЕ ЭТИХ СЛОВ НАДО ДОБАВИТЬ ИГРУ ПОИСК РАКУШЕК!!!!
+    call start_hidden_game
 
     scene pool_bg with fade
     show rtut neutral at Position(xalign=0.27, yalign=0.96) with dissolve
@@ -621,3 +622,47 @@ screen puzzle_screen():
                     ypos y_pos
                     droppable True
                     dragged pieces_dragged
+
+init python:
+    items_data = {
+        "first_shell":   {"image": "images/first_shell.png",   "thumb": "images/first_shell_under_water.png", "focus_mask": "images/first_shell_mask.png", "pos": (916, 622), "found": False},
+        "second_shell":   {"image": "images/second_shell.png",   "thumb": "images/second_shell_under_water.png", "focus_mask": "images/second_shell_mask.png", "pos": (705, 784), "found": False},
+        "third_shell":   {"image": "images/third_shell.png",   "thumb": "images/third_shell_under_water.png", "focus_mask": "images/third_shell_mask.png", "pos": (1317, 710), "found": False},
+        "fourth_shell":   {"image": "images/fourth_shell.png",   "thumb": "images/fourth_shell_under_water.png", "focus_mask": "images/fourth_shell_mask.png", "pos": (648, 376), "found": False},
+        "fifth_shell":   {"image": "images/fifth_shell.png",   "thumb": "images/fifth_shell_under_water.png", "focus_mask": "images/fifth_shell_mask.png", "pos": (1081, 177), "found": False},
+    }
+    hidden_game_bg = "images/find_items_background.png"
+
+    def find_item(item_id):
+        if items_data[item_id]["found"]:
+            return
+        items_data[item_id]["found"] = True
+        renpy.restart_interaction()
+
+screen hidden_object_game():
+
+    add hidden_game_bg
+
+    fixed:
+        for item_id, data in items_data.items():
+            if not data["found"]:
+                $ xpos, ypos = data["pos"]
+                imagebutton:
+                    idle data["thumb"]
+                    hover data["thumb"]
+                    focus_mask data["focus_mask"]
+                    xpos xpos
+                    ypos ypos
+                    action Function(find_item, item_id)
+
+    if all(data["found"] for data in items_data.values()):
+        timer 0.1 action Return()
+
+label start_hidden_game:
+    call screen hidden_object_game
+
+    show shells_endgame at truecenter with dissolve
+    pause 5
+    hide shells_endgame at truecenter with dissolve
+
+    return
