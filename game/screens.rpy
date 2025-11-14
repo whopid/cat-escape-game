@@ -367,11 +367,13 @@ screen main_menu():
     ## Контейнер для кнопок меню
     frame:
         style_prefix "main_menu"
-        xalign 0.55
-        yalign 0.4
+        xalign 0.5
+        yalign 0.2
         
         vbox:
             spacing 25
+            xalign 0.5
+            yalign 0.8
             
             ## Кнопка "Начать игру"
             imagebutton:
@@ -402,34 +404,25 @@ transform title_animation:
 
 ## Экран информации (как на картинке "неформация")
 screen info_screen():
-    tag menu
-    
-    add "gui/info_bg.png"  # Фон для экрана информации
-    
-    ## Заголовок "ИНФОРМАЦИЯ"
-    add "gui/info_title.png":
-        xalign 0.5
-        yalign 0.1
-    
-    ## Текст информации
-    frame:
-        xalign 0.5
-        yalign 0.5
-        xsize 600
-        ysize 400
-        
-        vbox:
-            spacing 20
-            text "Здесь будет информация об игре, разработчиках и управлении."
-            text "Кот-Ник: Путь Моруку - визуальная новелла..."
+
+    tag menu  # чтобы Ren'Py знал, что это меню и оно закрывается по возврату
+
+    # Фон
+    add "gui/main_menu_bg.png"  # можно поставить однотонный фон или картинку
+    add "gui/modal_info.png" xalign 0.5 yalign 0.5
+
+
+
+    # Кнопка возврата
+    #textbutton "Назад" action Return() xalign 0.5 yalign 0.9
     
     ## Кнопка назад
     imagebutton:
-        idle "gui/button_back_idle.png"
-        hover "gui/button_back_idle.png"
+        idle "gui/button_meow.png"
+        hover "gui/button_meow.png"  # можно сделать отдельный hover
         action Return()
-        xalign 0.1
-        yalign 0.9
+        xalign 0.5
+        yalign 0.78
 
 style main_menu_frame is empty
 style main_menu_vbox is vbox
@@ -1201,32 +1194,31 @@ style help_label_text:
 
 screen confirm(message, yes_action, no_action):
 
-    ## Гарантирует, что другие экраны будут недоступны, пока показан этот экран.
-    modal True
+    modal True  # блокирует клик по заднему фону
 
-    zorder 200
+    # Полупрозрачный тёмный фон
+    add Solid("#0008")
 
-    style_prefix "confirm"
+    # Твоё модальное окно
+    add "gui/confirm_window.png":
+        xalign 0.5
+        yalign 0.4
 
-    add "gui/overlay/confirm.png"
+    # Кнопка "Да"
+    imagebutton:
+        idle "gui/button_yes.png"
+        hover "gui/button_yes.png"
+        action yes_action
+        xalign 0.45
+        yalign 0.55
 
-    frame:
-
-        vbox:
-            xalign .5
-            yalign .5
-            spacing 45
-
-            label _(message):
-                style "confirm_prompt"
-                xalign 0.5
-
-            hbox:
-                xalign 0.5
-                spacing 150
-
-                textbutton _("Да") action yes_action
-                textbutton _("Нет") action no_action
+    # Кнопка "Нет"
+    imagebutton:
+        idle "gui/button_no.png"
+        hover "gui/button_no.png"
+        action no_action
+        xalign 0.55
+        yalign 0.55
 
     ## Правый клик и esc, как ответ "Нет".
     key "game_menu" action no_action
