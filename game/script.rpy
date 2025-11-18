@@ -160,7 +160,7 @@ label scene_2:
     hide rules_shells with dissolve
 
     #!!!!ПОСЛЕ ЭТИХ СЛОВ НАДО ДОБАВИТЬ ИГРУ ПОИСК РАКУШЕК!!!!
-    call start_hidden_game
+    call start_shells_game
 
     scene pool_bg with fade
     show rtut neutral at Position(xalign=0.27, yalign=0.96) with dissolve
@@ -245,7 +245,8 @@ label scene_4:
     pause
     hide rules_puzzle with dissolve
     #!!!ПОСЛЕ ЭТОГО ВСТАВИТЬ МИНИ ИГРУ ПАЗЗЛЫ
-    # call puzzle_game
+
+    call start_puzzle_game
 
     scene bg_forest with fade
 
@@ -518,37 +519,6 @@ label code_lock_game:
     
     jump after_minigame
 
-# Мини-игра "Поиск предметов"
-label find_items_game:
-    scene bg library
-    $ found_items = []
-    $ needed_items = ["ключ", "книга", "очки"]
-    
-    paracetamol "Найди все спрятанные предметы в библиотеке: ключ, книгу и очки."
-    
-    call screen find_items_screen
-    
-    paracetamol "Молодец! Нашел все предметы!"
-    jump after_minigame
-
-screen find_items_screen():
-    # Добавляем скрытые зоны для клика
-    imagemap:
-        ground "bg library"  # Ваше фоновое изображение
-        
-        # Определяем зоны, где можно кликать (координаты x1, y1, x2, y2)
-        hotspot (100, 200, 150, 250) action [AddToSet(found_items, "ключ"), Return()]
-        hotspot (300, 150, 350, 200) action [AddToSet(found_items, "книга"), Return()]
-        hotspot (500, 300, 550, 350) action [AddToSet(found_items, "очки"), Return()]
-    
-    # Показываем найденные предметы
-    vbox:
-        xalign 0.1
-        yalign 0.1
-        text "Найдено: [len(found_items)]/3 предметов"
-        for item in found_items:
-            text "[item]"
-
 label sudoku_game:
     scene bg desk
     $ sudoku_solved = False
@@ -623,6 +593,8 @@ screen puzzle_screen():
                     droppable True
                     dragged pieces_dragged
 
+
+#игра ракушки
 init python:
     items_data = {
         "first_shell":   {"image": "images/first_shell.png",   "thumb": "images/first_shell_under_water.png", "focus_mask": "images/first_shell_mask.png", "pos": (916, 622), "found": False},
@@ -658,11 +630,176 @@ screen hidden_object_game():
     if all(data["found"] for data in items_data.values()):
         timer 0.1 action Return()
 
-label start_hidden_game:
+label start_shells_game:
     call screen hidden_object_game
 
     show shells_endgame at truecenter with dissolve
     pause 5
     hide shells_endgame at truecenter with dissolve
+
+    return
+
+#игра пазл
+init python:
+    import random
+
+    # === Настройки/Данные пазла ===
+    # Список словарей: имя кусочка, файл картинки, целевая позиция (x,y),
+    # размеры (w,h) для зоны "цели" (обычно берем размеры картинки).
+    # Координаты в пикселях относительно левого верхнего угла экрана/DragGroup.
+    pieces_data = [
+        { "id": "p0", "img": "images/puzzle/piece_0.png", "target": (588, 320), "placed": False },
+        { "id": "p1", "img": "images/puzzle/piece_1.png", "target": (774, 320), "placed": False },
+        { "id": "p2", "img": "images/puzzle/piece_2.png", "target": (960, 320), "placed": False },
+        { "id": "p3", "img": "images/puzzle/piece_3.png", "target": (1146, 320), "placed": False },
+        { "id": "p4", "img": "images/puzzle/piece_4.png", "target": (588, 430), "placed": False },
+        { "id": "p5", "img": "images/puzzle/piece_5.png", "target": (774, 430), "placed": False },
+        { "id": "p6", "img": "images/puzzle/piece_6.png", "target": (960, 430), "placed": False },
+        { "id": "p7", "img": "images/puzzle/piece_7.png", "target": (1146, 430), "placed": False },
+        { "id": "p8", "img": "images/puzzle/piece_8.png", "target": (588, 540), "placed": False },
+        { "id": "p9", "img": "images/puzzle/piece_9.png", "target": (774, 540), "placed": False },
+        { "id": "p10", "img": "images/puzzle/piece_10.png", "target": (960, 540), "placed": False },
+        { "id": "p11", "img": "images/puzzle/piece_11.png", "target": (1146, 540), "placed": False },
+        { "id": "p12", "img": "images/puzzle/piece_12.png", "target": (588, 650), "placed": False },
+        { "id": "p13", "img": "images/puzzle/piece_13.png", "target": (774, 650), "placed": False },
+        { "id": "p14", "img": "images/puzzle/piece_14.png", "target": (960, 650), "placed": False },
+        { "id": "p15", "img": "images/puzzle/piece_15.png", "target": (1146, 650), "placed": False },
+    ]
+
+    # === Служебные поля, заполняемые при init игры ===
+    for piece in pieces_data:
+        piece.setdefault("placed", False)   # пометка — установлен на место
+        piece.setdefault("start", None)     # начальная (перемешанная) позиция
+        piece.setdefault("w", 186.06)
+        piece.setdefault("h", 110.01)
+
+    # Если вы знаете размеры каждого куска, можно указать p["w"], p["h"].
+    # Иначе Ren'Py определит размеры при первом рендере. Для надёжности можно
+    # задать значения вручную, особенно если target зоны меньше/больше.
+
+    # === Функция перемешивания стартовых позиций ===
+    def shuffle_start_positions(area=(348, 203, 1576, 921)):
+        # area = (min_x, min_y, max_x, max_y) — область, где будут лежать кусочки
+        min_x, min_y, max_x, max_y = area
+        for piece in pieces_data:
+            # случайная позиция в указанной области
+            sx = random.randint(min_x, max_x)
+            sy = random.randint(min_y, max_y)
+            piece["start"] = (sx, sy)
+
+    # === Колбэк, вызываемый при отпускании перетаскиваемого куска ===
+    def piece_dragged(drags, drop):
+        if not drags:
+            return
+        drag = drags[0]
+        piece_id = drag.drag_name
+
+        if not drop:
+            return
+
+        if drop.drag_name == piece_id + "_target":
+
+            # находим кусочек
+            piece = next((p for p in pieces_data if p["id"] == piece_id), None)
+            if not piece:
+                return
+
+            tx, ty = piece["target"]
+            drag.snap(tx, ty, delay=0.12)
+
+            piece["placed"] = True
+
+            # обновление интерфейса
+            renpy.restart_interaction()
+
+            # === если пазл собран — автоматически закрываем экран ===
+            if puzzle_completed():
+                renpy.hide_screen("puzzle_screen")
+                return True
+
+            return
+
+
+
+    # === Утилита проверки победы ===
+    def puzzle_completed():
+        return all(p["placed"] for p in pieces_data)
+
+
+# === Screen, который отображает пазл ===
+screen puzzle_screen():
+    # Фон для пазла
+    add "images/puzzle/puzzles_background.png"
+
+    # DragGroup — все drags должны быть в одном DragGroup, чтобы drop работал.
+    draggroup:
+
+        # Сначала создаём все целевые (droppable) зоны — их drag_name = id + "_target"
+        # Это нужен для проверки совпадения.
+        for piece in pieces_data:
+            # Можно визуализировать цель для отладки:
+            # frame:
+            #     background Solid("#ffffff44")
+            #     xysize (p.get("w", 100), p.get("h", 100))
+            #     xpos p["target"][0] ypos p["target"][1]
+            #     draggable False
+            #     droppable True
+            #     drag_name p["id"] + "_target"
+
+            # если хотите невидимую цель (без рамки), делаем так:
+            drag:
+                drag_name piece["id"] + "_target"
+                draggable False
+                droppable True
+                xpos piece["target"][0]
+                ypos piece["target"][1]
+                # для удобства можно поставить маленький пустой контейнер того же размера
+                add Solid("#0000", xysize=(piece["w"], piece["h"]))
+
+        # Теперь создаём перетаскиваемые кусочки
+        for piece in pieces_data:
+            # Если кусочек уже «поставлен», хотим показывать его на целевой позиции
+            # и не позволять двигать.
+            if piece.get("placed"):
+                drag:
+                    drag_name piece["id"]
+                    draggable False
+                    droppable False
+                    xpos piece["target"][0]
+                    ypos piece["target"][1]
+                    add piece["img"]
+            else:
+                drag:
+                    drag_name piece["id"]
+                    draggable True
+                    droppable False
+                    # При перетаскивании будет вызван наш python-колбэк
+                    dragged piece_dragged
+                    # Стартовые координаты (перемешивание)
+                    xpos piece["start"][0]
+                    ypos piece["start"][1]
+                    add piece["img"]
+
+    # HUD: проверка завершения; если все поставлены, показываем кнопку продолжить
+    if puzzle_completed():
+        frame:
+            xalign 0.5
+            yalign 0.95
+            text "Пазл собран! Нажмите чтобы продолжить."
+            textbutton "Дальше" action Return(True)
+
+# === Label для показа пазла ===
+label start_puzzle_game:
+    python:
+        for p in pieces_data:
+            p["placed"] = False
+
+    # Перемешиваем стартовые позиции каждый раз, когда игрок начинает игру заново.
+    $ shuffle_start_positions(area=(348, 203, 1576, 921))  # скорректируйте область
+    call screen puzzle_screen
+
+    show puzzles_endgame at truecenter with dissolve
+    pause 5
+    hide puzzles_endgame at truecenter with dissolve
 
     return
