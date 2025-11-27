@@ -313,7 +313,7 @@ label scene_5:
     hide rules_sudoku with dissolve
 
     # --- здесь появится экран Судоку ---
-    #call sudoku_minigame
+    call start_sudoku
 
     scene bg_perforator_room_kasper with fade
 
@@ -803,3 +803,98 @@ label start_puzzle_game:
     hide puzzles_endgame at truecenter with dissolve
 
     return
+
+init python:
+    style.num_button = Style(style.default)
+    style.num_button.font = "gui/Faithful.ttf"
+    style.num_button.size = 28
+
+    style.num_button_text = Style(style.text)
+    style.num_button_text.color = "#01134A"
+    style.num_button_text.hover_color = "#2A428B"
+
+
+    sudoku = [
+        [3,8,9,0,0,0,5,6,0],
+        [0,2,1,9,5,3,0,0,0],
+        [7,0,0,8,0,0,3,9,1],
+        [2,6,0,1,3,0,0,0,9],
+        [0,9,0,0,6,4,8,2,5],
+        [5,0,7,2,0,8,0,3,0],
+        [9,1,0,3,0,7,6,0,8],
+        [0,0,0,6,1,0,2,7,4],
+        [4,0,6,0,8,0,9,0,0]
+    ]
+
+    original = [row[:] for row in sudoku]
+
+    selected = (0,0)
+
+    def wrong(r,c):
+        v=sudoku[r][c]
+        if v==0: return False
+        if sudoku[r].count(v)>1: return True
+        if [sudoku[i][c] for i in range(9)].count(v)>1: return True
+        br,bc=(r//3)*3,(c//3)*3
+        block=[sudoku[i][j] for i in range(br,br+3) for j in range(bc,bc+3)]
+        return block.count(v)>1
+
+label start_sudoku:
+    call screen sudoku_screen
+
+    show sudoku_endgame at truecenter with dissolve
+    pause 5
+    hide sudoku_endgame at truecenter with dissolve
+
+    return
+
+screen sudoku_screen():
+    add "images/sudoku_background.png"
+
+    for r in range(9):
+        for c in range(9):
+            $ x = 844 + c * 26 + (c // 3) * 16 + 3; y=347 + r * 29 + (r // 3) * 14 - 2
+            frame:
+                xpos x ypos y xsize 26 ysize 29
+                background ("#f88" if wrong(r,c) else ("#34AB84" if (r,c)==selected else None))
+                if sudoku[r][c]:
+                    text str(sudoku[r][c]) font "gui/Faithful.ttf" size 28 color "#01134A"
+
+                button:
+                    action SetVariable("selected",(r,c))
+                    background None
+
+    vbox:
+        xpos 885 ypos 640  # выше чем было
+
+        hbox:
+            spacing 6
+            for n in range(1,10):
+                textbutton str(n) style "num_button" action Function(set_num, n)
+
+        imagebutton:
+            idle "images/sudoku_check_button.png"
+            hover "images/sudoku_check_button_hover.png"
+            action Function(try_finish_sudoku)
+            xoffset 15
+
+init python:
+    def set_num(n):
+        r, c = selected
+        if original[r][c] == 0:
+            sudoku[r][c] = n
+
+    def check_win():
+        for r in range(9):
+            for c in range(9):
+                if sudoku[r][c] == 0 or wrong(r,c):
+                    renpy.notify("Есть ошибки!")
+                    return False
+        renpy.notify("Готово!")
+        return True
+
+    def try_finish_sudoku():
+        if check_win():
+            renpy.end_interaction(True)   # закрывает экран правильно
+
+
