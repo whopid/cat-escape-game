@@ -160,7 +160,7 @@ label scene_2:
     hide rules_shells with dissolve
 
     #!!!!ПОСЛЕ ЭТИХ СЛОВ НАДО ДОБАВИТЬ ИГРУ ПОИСК РАКУШЕК!!!!
-    call start_shells_game
+    #call start_shells_game
 
     scene pool_bg with fade
     show rtut neutral at Position(xalign=0.27, yalign=0.96) with dissolve
@@ -246,7 +246,7 @@ label scene_4:
     hide rules_puzzle with dissolve
     #!!!ПОСЛЕ ЭТОГО ВСТАВИТЬ МИНИ ИГРУ ПАЗЗЛЫ
 
-    call start_puzzle_game
+    #call start_puzzle_game
 
     scene bg_forest with fade
 
@@ -313,7 +313,7 @@ label scene_5:
     hide rules_sudoku with dissolve
 
     # --- здесь появится экран Судоку ---
-    call start_sudoku
+    #call start_sudoku
 
     scene bg_perforator_room_kasper with fade
 
@@ -382,6 +382,7 @@ label scene_6:
     # -------------------------
     # ПЕРВАЯ ЗАГАДКА
     # -------------------------
+    call start_riddle_1
 
 
     kin "Неплохо. Тогда вот вторая."
@@ -389,7 +390,7 @@ label scene_6:
     # -------------------------
     # ВТОРАЯ ЗАГАДКА
     # -------------------------
-
+    call start_riddle_2
     # ФОН — Ник и Кин
 
     kin "Слушай, а что ты тут, такой умный, забыл? Куда бежишь?"
@@ -417,6 +418,7 @@ label scene_6:
 
     # -------------------------
     # ТРЕТЬЯ ЗАГАДКА
+    call start_riddle_3
 
     scene black with fade
     centered "{size=40}Едва Ник выдавливает ответ, Кин с яростным шипением бросается на него — и растворяется в воздухе, словно его никогда и не было" with dissolve
@@ -773,7 +775,6 @@ screen puzzle_screen():
                     drag_name piece["id"]
                     draggable True
                     droppable False
-                    # При перетаскивании будет вызван наш python-колбэк
                     dragged piece_dragged
                     # Стартовые координаты (перемешивание)
                     xpos piece["start"][0]
@@ -794,8 +795,7 @@ label start_puzzle_game:
         for p in pieces_data:
             p["placed"] = False
 
-    # Перемешиваем стартовые позиции каждый раз, когда игрок начинает игру заново.
-    $ shuffle_start_positions(area=(348, 203, 1576, 921))  # скорректируйте область
+    $ shuffle_start_positions(area=(348, 203, 1576, 921))
     call screen puzzle_screen
 
     show puzzles_endgame at truecenter with dissolve
@@ -804,6 +804,7 @@ label start_puzzle_game:
 
     return
 
+#игра судоку
 init python:
     style.num_button = Style(style.default)
     style.num_button.font = "gui/Faithful.ttf"
@@ -865,7 +866,7 @@ screen sudoku_screen():
                     background None
 
     vbox:
-        xpos 885 ypos 640  # выше чем было
+        xpos 885 ypos 640
 
         hbox:
             spacing 6
@@ -895,6 +896,147 @@ init python:
 
     def try_finish_sudoku():
         if check_win():
-            renpy.end_interaction(True)   # закрывает экран правильно
+            renpy.end_interaction(True)
+
+#игра загадка 1
+default riddle_answer_1 = ""
+
+label start_riddle_1:
+    call screen riddle_screen_1
+    "Загадка решена!"
+    return
+
+init python:
+    def try_submit_1():
+        ans = riddle_answer_1.strip().lower()
+        if ans == "лес":
+            renpy.return_statement()
+        else:
+            renpy.notify("Неверно, попробуй ещё!")
+            return
+
+style riddle_input_frame:
+    background Frame("#0B0C24", 12, 12)
+    outlines [(2, "#ffffff", 0, 0)]
+
+screen riddle_screen_1():
+
+    add "images/riddle_background_1.png"
+
+    frame:
+        style "riddle_input_frame"
+
+        xpos 0.448
+        ypos 0.605
+
+        xsize 200
+        ysize 40
+
+        padding (0, 0)
+
+        input:
+            value VariableInputValue("riddle_answer_1")
+            pixel_width 200
+
+            font "gui/Faithful.ttf"
+            size 30
+            color "#ffffff"
+
+            xalign 0.5
+            yalign 0.5
+
+    key "K_RETURN" action Function(try_submit_1)
+    key "K_KP_ENTER" action Function(try_submit_1)
 
 
+#игра загадка 2
+default riddle_answer_2 = ""
+
+label start_riddle_2:
+    call screen riddle_screen_2
+    "Загадка решена!"
+    return
+
+init python:
+    def try_submit_2():
+        ans = riddle_answer_2.strip().lower()
+        if ans == "рыба":
+            renpy.return_statement()
+        else:
+            renpy.notify("Неверно, попробуй ещё!")
+            return
+
+screen riddle_screen_2():
+
+    add "images/riddle_background_2.png"
+
+    frame:
+        style "riddle_input_frame"
+
+        xpos 0.448
+        ypos 0.577
+
+        xsize 200
+        ysize 40
+
+        padding (0, 0)
+
+        input:
+            value VariableInputValue("riddle_answer_2")
+            pixel_width 200
+
+            font "gui/Faithful.ttf"
+            size 30
+            color "#ffffff"
+
+            xalign 0.5
+            yalign 0.5
+
+    key "K_RETURN" action Function(try_submit_2)
+    key "K_KP_ENTER" action Function(try_submit_2)
+
+#игра загадка 3
+default riddle_answer_3 = ""
+
+label start_riddle_3:
+    call screen riddle_screen_3
+    "Загадка решена!"
+    return
+
+init python:
+    def try_submit_3():
+        ans = riddle_answer_3.strip().lower()
+        if ans == "тень":
+            renpy.return_statement()
+        else:
+            renpy.notify("Неверно, попробуй ещё!")
+            return
+
+screen riddle_screen_3():
+
+    add "images/riddle_background_3.png"
+
+    frame:
+        style "riddle_input_frame"
+
+        xpos 0.448
+        ypos 0.577
+
+        xsize 200
+        ysize 40
+
+        padding (0, 0)
+
+        input:
+            value VariableInputValue("riddle_answer_3")
+            pixel_width 200
+
+            font "gui/Faithful.ttf"
+            size 30
+            color "#ffffff"
+
+            xalign 0.5
+            yalign 0.5
+
+    key "K_RETURN" action Function(try_submit_3)
+    key "K_KP_ENTER" action Function(try_submit_3)
