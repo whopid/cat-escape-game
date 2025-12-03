@@ -160,7 +160,7 @@ label scene_2:
     hide rules_shells with dissolve
 
     #!!!!ПОСЛЕ ЭТИХ СЛОВ НАДО ДОБАВИТЬ ИГРУ ПОИСК РАКУШЕК!!!!
-    #call start_shells_game
+    call start_shells_game
 
     scene pool_bg with fade
     show rtut neutral at Position(xalign=0.27, yalign=0.96) with dissolve
@@ -246,7 +246,7 @@ label scene_4:
     hide rules_puzzle with dissolve
     #!!!ПОСЛЕ ЭТОГО ВСТАВИТЬ МИНИ ИГРУ ПАЗЗЛЫ
 
-    #call start_puzzle_game
+    call start_puzzle_game
 
     scene bg_forest with fade
 
@@ -313,7 +313,7 @@ label scene_5:
     hide rules_sudoku with dissolve
 
     # --- здесь появится экран Судоку ---
-    #call start_sudoku
+    call start_sudoku
 
     scene bg_perforator_room_kasper with fade
 
@@ -442,7 +442,7 @@ label scene_7:
     n "(Тот странный кот в самом начале... Парацетамол... Что он говорил?)"
     n "«Остерегайся числа 4»..."
     n "(Почему четверки? Может, в ней и есть ключ?)"
-
+    call start_code_lock_game
     jump ending_scene
 
 
@@ -1040,3 +1040,53 @@ screen riddle_screen_3():
 
     key "K_RETURN" action Function(try_submit_3)
     key "K_KP_ENTER" action Function(try_submit_3)
+
+#игра кодовый замок
+default code_input = ""
+
+label start_code_lock_game:
+    call screen code_lock_game
+    "Замок открыт!"
+    return
+
+init python:
+    def try_unlock():
+        ans = code_input.strip().lower()
+        if ans == "4734":
+            renpy.return_statement()
+        else:
+            renpy.notify("Неверно, попробуй ещё!")
+            return
+
+style code_lock_input:
+    background Frame("#C8E590", 12, 12)
+    outlines [(2, "#ffffff", 0, 0)]
+
+screen code_lock_game():
+
+    add "images/code_lock_background.png"
+
+    frame:
+        style "code_lock_input"
+
+        xpos 0.695
+        ypos 0.469
+
+        xsize 200
+        ysize 40
+
+        padding (0, 0)
+
+        input:
+            value VariableInputValue("code_input")
+            pixel_width 200
+
+            font "gui/Faithful.ttf"
+            size 30
+            color "#0B0C24"
+
+            xalign 0.5
+            yalign 0.5
+
+    key "K_RETURN" action Function(try_unlock)
+    key "K_KP_ENTER" action Function(try_unlock)
