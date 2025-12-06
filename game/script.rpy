@@ -1,5 +1,4 @@
-﻿# Определяем персонажей
-define mc = Character("[player_name]", color="#ffffff")
+﻿define mc = Character("[player_name]", color="#ffffff")
 define n = Character("Ник", color="#ffffff")
 define p = Character("Парацетамол", color="#ffff9b")
 define rtut = Character("Ртуть", color="#91cdff")
@@ -9,34 +8,26 @@ define kasper = Character("Каспер", color="42fffc")
 define kin = Character("Кин", color="#afff53")
 
 
-# Начало игры
 label start:
-    # Первая сцена
     scene black_bg
 
-    # Черный экран
     scene black
     with fade
 
-    # Медленно появляющийся текст
     show text "{size=40}Что произошло?.. Кто я?.. Где я?.. Последнее, что я помню… яркий свет… разные голоса…" with dissolve
     pause 
     hide text with dissolve
  
-    # Плавное прояснение сцены (комната глазами кота)
     scene nik_room with fade
     n "Никель?.. Э-э… Я?..."
 
-    # Черный экран с текстом имени
     scene black with fade
     show text "{size=40}Точно. Меня зовут Никель." with dissolve
     pause 
     hide text with dissolve
 
-    # Переход к нормальной сцене с котом
     scene location1_bg with fade
 
-    # Реплики кота
     n "Какое-то странное место… Металлические стены, пахнет химией?... И эти провода свисают с потолка..."
     n "Всё вокруг кажется таким холодным и... брошенным. Надо срочно выбираться отсюда."
 
@@ -44,25 +35,20 @@ label start:
     return
 
 
-# scene_1.rpy
 label scene_1:
 
-    # Черный экран
     scene black with fade
 
-    # Текст-описание
     show text "{size=40}Никель осторожно движется по коридору. По стенам — большие аквариумы с причудливыми водорослями, которые подсвечиваются неестественным светом." with dissolve
     pause 
     hide text with dissolve
 
-    # Фон 1 — коридор с аквариумами
     scene corridor_aquariums with fade
     show nickel neutral at Position(xalign=0.2, yalign=0.9) with dissolve
 
     n "Аквариумы? Растения? Интересно… для чего они тут?.."
     n "Странное чувство, словно за мной кто-то наблюдает..."
 
-    # Смена сцены — напряжённый момент
     scene black with fade
     show text "{size=40}Ник замирает, почувствовав движение в конце коридора." with dissolve
     pause
@@ -70,7 +56,6 @@ label scene_1:
     pause 
     hide text with dissolve
 
-    # Фон 2 — появляется Парацетамол
     scene corridor_aquariums_paracetamol with fade
     pause 
     scene corridor_aquariums with fade
@@ -87,13 +72,11 @@ label scene_1:
     n "Я Ник. Хочу найти выход. Ты помочь можешь?"
     p "О, ну другое дело, Ник! Только меня выход не интересует. Однако запомни одну вещь: бойся змей. А, блин, две вещи! И остерегайся числа {color=#F0E68C}{b}4{/b}."
 
-    # --- Системное уведомление ---
     scene black with fade
     show system_notice at truecenter with dissolve
     pause 5
     hide system_notice with dissolve
 
-    # Возврат к разговору
     scene corridor_aquariums with fade
     show paracetamol neutral at Position(xalign=0.68, yalign=0.6)
     show nickel neutral at Position(xalign=0.2, yalign=0.9) with dissolve
@@ -102,7 +85,6 @@ label scene_1:
     n "Спасибо... Я, пожалуй, пойду тогда."
     p "Налево иди!"
 
-    # --- Внутренний монолог ---
     scene black with fade
     show text "{size=40}Какой странный кот… Надеюсь, мне еще повезет встретить \nздесь кого-нибудь адекватного… в своём уме." with dissolve
     pause 
@@ -115,9 +97,9 @@ label scene_1:
     jump scene_2
     return
 
+
 label scene_2:
 
-    # --- Локация: бассейн ---
     scene pool_bg with fade
     show nickel neutral at Position(xalign=0.0, yalign=0.9) with dissolve
 
@@ -125,13 +107,11 @@ label scene_2:
     n "Похоже, на той стороне есть дверь. Как же мне туда добраться?.."
     n "Мне показалось, или только что какая-то тень проплыла?.. Надо подойти поближе."
 
-    # --- Темнота и появление выдры ---
     scene black with fade
     show text "{size=40}Из воды выплывает выдра." at truecenter with dissolve
     pause 
     hide text with dissolve
 
-    # --- Появляется Ртуть ---
     scene pool_bg with fade
     show rtut neutral at Position(xalign=0.27, yalign=0.96) with dissolve
     show nickel neutral at Position(xalign=-0.02, yalign=0.9) with dissolve
@@ -154,12 +134,10 @@ label scene_2:
     hide text with dissolve
     scene black with fade
 
-    #правила игры
     show rules_shells at truecenter with dissolve
     pause 
     hide rules_shells with dissolve
 
-    #!!!!ПОСЛЕ ЭТИХ СЛОВ НАДО ДОБАВИТЬ ИГРУ ПОИСК РАКУШЕК!!!!
     call start_shells_game
 
     scene pool_bg with fade
@@ -167,7 +145,6 @@ label scene_2:
     show nickel neutral at Position(xalign=-0.02, yalign=0.9) with dissolve
     rtut "Отличная командная работа! Теперь моя очередь!"
 
-    # --- Конец сцены ---
     scene black with fade
     show text "{size=40}Ртуть помогла Нику переплыть на другую сторону бассейна. Он отправляется дальше…" at truecenter with dissolve
     pause 
@@ -176,16 +153,15 @@ label scene_2:
     jump scene_3
     return
 
+
 label scene_3:
 
-    # --- Локация: коридор ---
     scene corridor_green with fade
     show nickel neutral at Position(xalign=0.65, yalign=0.6) with dissolve:
             zoom 0.8
 
     n "(Не знаю, куда мне стоит пойти дальше…)"
 
-    # --- Переход: чёрный экран и повествование ---
     scene black with fade
     show text "{size=40}Ник идёт дальше.\n\nНеожиданно под лапами начинают попадаться сухие веточки и листья..." at truecenter with dissolve
     pause 
@@ -195,8 +171,8 @@ label scene_3:
     pause 
     hide text with dissolve
 
-    # --- Переход к следующей локации ---
     jump scene_4
+
 
 label scene_4:
 
@@ -240,11 +216,9 @@ label scene_4:
     pause 
     hide text with dissolve
 
-    # --- Системная вставка: начало мини-игры ---
     show rules_puzzle at truecenter with dissolve
     pause
     hide rules_puzzle with dissolve
-    #!!!ПОСЛЕ ЭТОГО ВСТАВИТЬ МИНИ ИГРУ ПАЗЗЛЫ
 
     call start_puzzle_game
 
@@ -262,9 +236,9 @@ label scene_4:
     jump scene_5
     return
 
+
 label scene_5:
 
-    # Черный экран с текстом
     scene black
     with fade
 
@@ -272,7 +246,6 @@ label scene_5:
     centered "{size=40}Воздух здесь был странно тяжёлым и густым, от него кружилась голова и плыли пятна перед глазами.  
     С трудом различив в листве контуры двери, он приложил карту к панели." 
     centered "{size=40}Дверь бесшумно открылась."
-    # ФОН 1 — будка без кота
     scene bg_perforator_room_empty
     with fade
 
@@ -283,7 +256,6 @@ label scene_5:
     golos "Ошибка распознавания ответа. Для взаимодействия посмотрите на центральный монитор."
     n "…"
 
-    # ФОН 2 — будка с котом на экране
     scene bg_perforator_room_kasper
     with dissolve
 
@@ -306,13 +278,11 @@ label scene_5:
     n "То есть?"
     kasper "Требуется перезагрузка системы безопасности и решение капчи для подтверждения статуса. (•̀-•̀)"
 
-    # --- Системная вставка: начало мини-игры ---
     scene black with fade
     show rules_sudoku at truecenter with dissolve
     pause 10
     hide rules_sudoku with dissolve
 
-    # --- здесь появится экран Судоку ---
     call start_sudoku
 
     scene bg_perforator_room_kasper with fade
@@ -352,18 +322,17 @@ label scene_5:
     Однако вы всегда можете обратиться ко мне за помощью.  
     Конец связи. Удачи, пользователь Ник! (•̀ ω - )"
 
-    # Появляется карта
     scene karta_kasper with fade
     pause
     jump scene_6
     return
+
 
 label scene_6:
 
     scene black with fade
     centered "{size=40}Ник долго плутал, внимательно считая повороты, и наконец очутился в коридоре, залитом сиреневым цветом, вдоль которого росли цветы.\nНе спатифиллумы…"
 
-    # ФОН 1 — коридор
     scene corridor_flowers_1 with dissolve
 
     n "Так это тот самый коридор, о котором говорил Каспер."
@@ -373,25 +342,16 @@ label scene_6:
     scene black with fade
     centered "{size=40}После его движения отражение в «зеркале» улыбается.\nНик замирает, понимая, что перед ним — не зеркало, а другой кот, очень на него похожий." with dissolve
 
-    # ФОН 2 — коридор с «зеркальным» котом
     scene corridor_flowers_2 with dissolve
 
     kin "Удивился? Извини, немного заигрался. Понимаешь, этот коридор принадлежит мне."
     kin "Здесь мои правила. Нужно отгадать загадки, если хочешь пройти."
 
-    # -------------------------
-    # ПЕРВАЯ ЗАГАДКА
-    # -------------------------
     call start_riddle_1
-
 
     kin "Неплохо. Тогда вот вторая."
 
-    # -------------------------
-    # ВТОРАЯ ЗАГАДКА
-    # -------------------------
     call start_riddle_2
-    # ФОН — Ник и Кин
 
     kin "Слушай, а что ты тут, такой умный, забыл? Куда бежишь?"
     n "Мне сказали, что за этим коридором - выход. Я хочу выбраться отсюда!"
@@ -416,8 +376,6 @@ label scene_6:
     kin "Ты сам скоро поймёшь, насколько сильно ошибаешься…"
     kin "Последняя загадка."
 
-    # -------------------------
-    # ТРЕТЬЯ ЗАГАДКА
     call start_riddle_3
 
     scene black with fade
@@ -429,10 +387,9 @@ label scene_6:
 
     centered "{size=40}Он подбегает к двери - и видит массивный замок с панелью для кода. \n Ловушка? Или последнее испытание?" with dissolve
 
-
-    # Переход к следующей сцене
     jump scene_7
     return
+
 
 label scene_7:
 
@@ -446,9 +403,6 @@ label scene_7:
     jump ending_scene
 
 
-# -----------------------------
-# ФИНАЛ
-# -----------------------------
 label ending_scene:
 
     scene black with fade
@@ -480,130 +434,15 @@ label ending_scene:
 
     return
 
-label chapter1_menu:
-    menu:
-        "Какую задачу хочешь решить первой?"
-        
-        "Решить судоку":
-            jump sudoku_game
-            
-        "Собрать пазл":
-            jump puzzle_game
-            
-        "Найти спрятанные предметы":
-            jump find_items_game
-            
-        "Сыграть в три в ряд":
-            jump match3_game
-            
-        "Ввести код от замка":
-            jump code_lock_game
-
-label after_minigame:
-    paracetamol "Отлично справился! Что будем делать дальше?"
-    jump chapter1_menu
-
-label code_lock_game:
-    scene bg safe
-    $ code_input = ""
-    $ correct_code = "1234"
-    
-    paracetamol "Нужно ввести код от сейфа. Попробуй угадать!"
-    
-    while code_input != correct_code:
-        $ code_input = renpy.input("Введите 4-значный код (подсказка: [correct_code]):", length=4)
-        
-        if code_input == correct_code:
-            paracetamol "Ура! Сейф открыт!"
-            $ renpy.notify("Сейф открыт! +10 очков")
-        else:
-            paracetamol "Код не подошел. Попробуй еще раз."
-    
-    jump after_minigame
-
-label sudoku_game:
-    scene bg desk
-    $ sudoku_solved = False
-    
-    paracetamol "Реши судоку! Заполни все клетки цифрами от 1 до 4."
-    
-    call screen sudoku_screen
-    
-    if sudoku_solved:
-        paracetamol "Поздравляю! Судоку решено!"
-    else:
-        paracetamol "В следующий раз получится!"
-    
-    jump after_minigame
-
-screen sudoku_screen():
-    frame:
-        xalign 0.5
-        yalign 0.3
-        xpadding 20
-        ypadding 20
-        
-        vbox:
-            text "Мини-судоку 2x2" xalign 0.5
-            
-            # Простая сетка 2x2 для начала
-            grid 2 2:
-                spacing 10
-                
-                for i in range(4):
-                    textbutton str(i+1):
-                        action [SetVariable("sudoku_solved", True), Return()]
-                        xminimum 50
-                        yminimum 50
-
-label puzzle_game:
-    scene bg table
-    $ pieces_placed = 0
-    
-    paracetamol "Собери пазл из 4 кусочков!"
-    
-    call screen puzzle_screen
-    
-    paracetamol "Отлично! Картинка собрана!"
-    jump after_minigame
-
-screen puzzle_screen():
-    draggroup:
-        # Целевые позиции для кусочков
-        for i in range(2):
-            for j in range(2):
-                $ x_pos = 400 + j * 100
-                $ y_pos = 200 + i * 100
-                drag:
-                    drag_name "target_[i]_[j]"
-                    xpos x_pos
-                    ypos y_pos
-                    xsize 100
-                    ysize 100
-                    draggable False
-        
-        # Драг-элементы (кусочки пазла)
-        for i in range(2):
-            for j in range(2):
-                $ x_pos = 100 + j * 110
-                $ y_pos = 200 + i * 110
-                drag:
-                    drag_name "piece_[i]_[j]"
-                    child "puzzle_piece_[i]_[j]"  # Ваши изображения кусочков
-                    xpos x_pos
-                    ypos y_pos
-                    droppable True
-                    dragged pieces_dragged
-
 
 #игра ракушки
 init python:
     items_data = {
-        "first_shell":   {"image": "images/first_shell.png",   "thumb": "images/first_shell_under_water.png", "focus_mask": "images/first_shell_mask.png", "pos": (916, 622), "found": False},
-        "second_shell":   {"image": "images/second_shell.png",   "thumb": "images/second_shell_under_water.png", "focus_mask": "images/second_shell_mask.png", "pos": (705, 784), "found": False},
-        "third_shell":   {"image": "images/third_shell.png",   "thumb": "images/third_shell_under_water.png", "focus_mask": "images/third_shell_mask.png", "pos": (1317, 710), "found": False},
-        "fourth_shell":   {"image": "images/fourth_shell.png",   "thumb": "images/fourth_shell_under_water.png", "focus_mask": "images/fourth_shell_mask.png", "pos": (648, 376), "found": False},
-        "fifth_shell":   {"image": "images/fifth_shell.png",   "thumb": "images/fifth_shell_under_water.png", "focus_mask": "images/fifth_shell_mask.png", "pos": (1081, 177), "found": False},
+        "first_shell":   {"image": "images/first_shell.png",   "thumb": "images/first_shell_under_water.png", "focus_mask": "images/first_shell_mask.png", "pos": (916, 622), "found": False, "found_image": "images/hide_first_shell.png", "found_pos": (114, 122)},
+        "second_shell":   {"image": "images/second_shell.png",   "thumb": "images/second_shell_under_water.png", "focus_mask": "images/second_shell_mask.png", "pos": (705, 784), "found": False, "found_image": "images/hide_second_shell.png", "found_pos": (117, 265)},
+        "third_shell":   {"image": "images/third_shell.png",   "thumb": "images/third_shell_under_water.png", "focus_mask": "images/third_shell_mask.png", "pos": (1317, 710), "found": False, "found_image": "images/hide_third_shell.png", "found_pos": (124, 436)},
+        "fourth_shell":   {"image": "images/fourth_shell.png",   "thumb": "images/fourth_shell_under_water.png", "focus_mask": "images/fourth_shell_mask.png", "pos": (648, 376), "found": False, "found_image": "images/hide_fourth_shell.png", "found_pos": (124, 637)},
+        "fifth_shell":   {"image": "images/fifth_shell.png",   "thumb": "images/fifth_shell_under_water.png", "focus_mask": "images/fifth_shell_mask.png", "pos": (1081, 177), "found": False, "found_image": "images/hide_fifth_shell.png", "found_pos": (129, 791)},
     }
     hidden_game_bg = "images/find_items_background.png"
 
@@ -629,6 +468,10 @@ screen hidden_object_game():
                     ypos ypos
                     action Function(find_item, item_id)
 
+    for item_id, data in items_data.items():
+        if data["found"]:
+            add data["found_image"] xpos data["found_pos"][0] ypos data["found_pos"][1]
+
     if all(data["found"] for data in items_data.values()):
         timer 0.1 action Return()
 
@@ -641,14 +484,11 @@ label start_shells_game:
 
     return
 
+
 #игра пазл
 init python:
     import random
 
-    # === Настройки/Данные пазла ===
-    # Список словарей: имя кусочка, файл картинки, целевая позиция (x,y),
-    # размеры (w,h) для зоны "цели" (обычно берем размеры картинки).
-    # Координаты в пикселях относительно левого верхнего угла экрана/DragGroup.
     pieces_data = [
         { "id": "p0", "img": "images/puzzle/piece_0.png", "target": (588, 320), "placed": False },
         { "id": "p1", "img": "images/puzzle/piece_1.png", "target": (774, 320), "placed": False },
@@ -668,28 +508,19 @@ init python:
         { "id": "p15", "img": "images/puzzle/piece_15.png", "target": (1146, 650), "placed": False },
     ]
 
-    # === Служебные поля, заполняемые при init игры ===
     for piece in pieces_data:
-        piece.setdefault("placed", False)   # пометка — установлен на место
-        piece.setdefault("start", None)     # начальная (перемешанная) позиция
+        piece.setdefault("placed", False)
+        piece.setdefault("start", None)
         piece.setdefault("w", 186.06)
         piece.setdefault("h", 110.01)
 
-    # Если вы знаете размеры каждого куска, можно указать p["w"], p["h"].
-    # Иначе Ren'Py определит размеры при первом рендере. Для надёжности можно
-    # задать значения вручную, особенно если target зоны меньше/больше.
-
-    # === Функция перемешивания стартовых позиций ===
     def shuffle_start_positions(area=(348, 203, 1576, 921)):
-        # area = (min_x, min_y, max_x, max_y) — область, где будут лежать кусочки
         min_x, min_y, max_x, max_y = area
         for piece in pieces_data:
-            # случайная позиция в указанной области
             sx = random.randint(min_x, max_x)
             sy = random.randint(min_y, max_y)
             piece["start"] = (sx, sy)
 
-    # === Колбэк, вызываемый при отпускании перетаскиваемого куска ===
     def piece_dragged(drags, drop):
         if not drags:
             return
@@ -701,7 +532,6 @@ init python:
 
         if drop.drag_name == piece_id + "_target":
 
-            # находим кусочек
             piece = next((p for p in pieces_data if p["id"] == piece_id), None)
             if not piece:
                 return
@@ -711,57 +541,31 @@ init python:
 
             piece["placed"] = True
 
-            # обновление интерфейса
             renpy.restart_interaction()
 
-            # === если пазл собран — автоматически закрываем экран ===
             if puzzle_completed():
                 renpy.hide_screen("puzzle_screen")
                 return True
 
             return
 
-
-
-    # === Утилита проверки победы ===
     def puzzle_completed():
         return all(p["placed"] for p in pieces_data)
 
-
-# === Screen, который отображает пазл ===
 screen puzzle_screen():
-    # Фон для пазла
     add "images/puzzle/puzzles_background.png"
 
-    # DragGroup — все drags должны быть в одном DragGroup, чтобы drop работал.
     draggroup:
-
-        # Сначала создаём все целевые (droppable) зоны — их drag_name = id + "_target"
-        # Это нужен для проверки совпадения.
         for piece in pieces_data:
-            # Можно визуализировать цель для отладки:
-            # frame:
-            #     background Solid("#ffffff44")
-            #     xysize (p.get("w", 100), p.get("h", 100))
-            #     xpos p["target"][0] ypos p["target"][1]
-            #     draggable False
-            #     droppable True
-            #     drag_name p["id"] + "_target"
-
-            # если хотите невидимую цель (без рамки), делаем так:
             drag:
                 drag_name piece["id"] + "_target"
                 draggable False
                 droppable True
                 xpos piece["target"][0]
                 ypos piece["target"][1]
-                # для удобства можно поставить маленький пустой контейнер того же размера
                 add Solid("#0000", xysize=(piece["w"], piece["h"]))
 
-        # Теперь создаём перетаскиваемые кусочки
         for piece in pieces_data:
-            # Если кусочек уже «поставлен», хотим показывать его на целевой позиции
-            # и не позволять двигать.
             if piece.get("placed"):
                 drag:
                     drag_name piece["id"]
@@ -776,20 +580,13 @@ screen puzzle_screen():
                     draggable True
                     droppable False
                     dragged piece_dragged
-                    # Стартовые координаты (перемешивание)
                     xpos piece["start"][0]
                     ypos piece["start"][1]
                     add piece["img"]
 
-    # HUD: проверка завершения; если все поставлены, показываем кнопку продолжить
     if puzzle_completed():
-        frame:
-            xalign 0.5
-            yalign 0.95
-            text "Пазл собран! Нажмите чтобы продолжить."
-            textbutton "Дальше" action Return(True)
+        timer 1 action Return(True)
 
-# === Label для показа пазла ===
 label start_puzzle_game:
     python:
         for p in pieces_data:
@@ -798,11 +595,16 @@ label start_puzzle_game:
     $ shuffle_start_positions(area=(348, 203, 1576, 921))
     call screen puzzle_screen
 
+    show solved_puzzle at truecenter
+    pause 3
+    hide solved_puzzle at truecenter
+
     show puzzles_endgame at truecenter with dissolve
     pause 5
     hide puzzles_endgame at truecenter with dissolve
 
     return
+
 
 #игра судоку
 init python:
@@ -897,6 +699,7 @@ init python:
     def try_finish_sudoku():
         if check_win():
             renpy.end_interaction(True)
+
 
 #игра загадка 1
 default riddle_answer_1 = ""
@@ -995,6 +798,7 @@ screen riddle_screen_2():
     key "K_RETURN" action Function(try_submit_2)
     key "K_KP_ENTER" action Function(try_submit_2)
 
+
 #игра загадка 3
 default riddle_answer_3 = ""
 
@@ -1040,6 +844,7 @@ screen riddle_screen_3():
 
     key "K_RETURN" action Function(try_submit_3)
     key "K_KP_ENTER" action Function(try_submit_3)
+
 
 #игра кодовый замок
 default code_input = ""
